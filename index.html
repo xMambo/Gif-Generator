@@ -1,0 +1,123 @@
+<!-- ### Instructions -->
+
+<!--1. Before you can make any part of our site work, you need to create an array of strings, each one related to a topic that interests you. Save it to a variable called `topics`.
+   * We chose animals for our theme, but you can make a list to your own liking.
+
+2. Your app should take the topics in this array and create buttons in your HTML.
+   * Try using a loop that appends a button for each string in the array.
+
+3. When the user clicks on a button, the page should grab 10 static, non-animated gif images from the GIPHY API and place them on the page.
+
+4. When the user clicks one of the still GIPHY images, the gif should animate. If the user clicks the gif again, it should stop playing.
+
+5. Under every gif, display its rating (PG, G, so on).
+   * This data is provided by the GIPHY API.
+   * Only once you get images displaying with button presses should you move on to the next step.
+
+6. Add a form to your page takes the value from a user input box and adds it into your `topics` array. Then make a function call that takes each topic in the array remakes the buttons on the page.
+
+7. Deploy your assignment to Github Pages.
+
+8. **Rejoice**! You just made something really cool.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+
+  <title>Giphy Generator</title>
+
+  <!-- Added a link to Bootstrap & CSS-->
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css">
+
+</head>
+
+<body>
+  
+<div class="container">
+  <h1>Gif Generator</h1>
+  <div id="buttons-view"></div>
+  <div id="gifs-appear-here"></div>
+</div> 
+
+<!-- add form input here -->
+
+
+
+
+ <!-- Added link to the jQuery Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script type="text/javascript">
+
+// make an array of topics for the generator
+var topics = ["dogs", "pizza", "smash brothers", "larry david"];
+
+// function to turn items in array into buttons
+function renderButtons() {
+  
+  //loops through array of topics
+for (var i = 0; i < topics.length; i++) {
+  //generate buttons for each topic in the array
+  var button = $("<button>");
+  button.addClass("topic-button");
+  button.attr("data-name", topics[i]);
+  button.text(topics[i]);
+  $("#buttons-view").append(button);
+}
+
+}
+
+
+
+
+$(document).on("click", ".topic-button", displayGifs,);
+
+//function for displaying buttons
+
+renderButtons();
+
+//funtion for displaying gifs
+function displayGifs() {
+  var gifs = $(this).attr("data-name");
+  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+        gifs + "&api_key=dc6zaTOxFJmzC&limit=10";
+
+  $.ajax({
+    url: queryURL,
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+
+    var results = response.data;
+
+    for (var a = 0; a < results.length; a++) {
+      var gifsDiv = $("<div>");
+      var p = $("<p>").text("Rating " + results[a].rating);
+        var gifImage = $("<img>");
+        gifImage.attr("src" , results[a].images.fixed_height.url);
+        gifsDiv.append(p);
+        gifsDiv.append(gifImage);
+        $("#gifs-appear-here").prepend(gifsDiv);
+    }
+  });
+}
+
+
+
+
+
+/* 6. Add a form to your page takes the value from a user input box 
+      and adds it into your `topics` array. Then make a function call 
+      that takes each topic in the array remakes the buttons on the page.*/
+
+
+</script>
+</body>
+
+
+
+</html>
