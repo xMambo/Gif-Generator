@@ -40,6 +40,11 @@
   
 <div class="container">
   <h1>Gif Generator</h1>
+    <form id="gif-form">
+      <label for="gif-input">Add a Topic</label>
+      <input type="text" id="user-topic">
+      <input id="select-topic" type="submit" value="Add">
+    </form>
   <div id="buttons-view"></div>
   <div id="gifs-appear-here"></div>
 </div> 
@@ -52,7 +57,7 @@
  <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
-
+$(document).ready(function() {
 // make an array of topics for the generator
 var topics = ["dogs", "pizza", "smash brothers", "larry david"];
 
@@ -67,6 +72,7 @@ for (var i = 0; i < topics.length; i++) {
   button.attr("data-name", topics[i]);
   button.text(topics[i]);
   $("#buttons-view").append(button);
+  
 }
 
 }
@@ -98,13 +104,27 @@ function displayGifs() {
       var gifsDiv = $("<div>");
       var p = $("<p>").text("Rating " + results[a].rating);
         var gifImage = $("<img>");
-        gifImage.attr("src" , results[a].images.fixed_height.url);
+        var still = results[a].images.fixed_height_still.url;
+        var animate = results[a].images.fixed_height.url;
+
+        gifImage.attr("src" ,still);
+        gifImage.addClass("gif");
+        gifImage.attr("data-state", "still");
+        gifImage.attr("data-still", still);
+        gifImage.attr("data-animate", animate);
+
         gifsDiv.append(p);
         gifsDiv.append(gifImage);
         $("#gifs-appear-here").prepend(gifsDiv);
+
     }
+          
+
   });
+        
 }
+
+        
 
 
 
@@ -113,8 +133,39 @@ function displayGifs() {
 /* 6. Add a form to your page takes the value from a user input box 
       and adds it into your `topics` array. Then make a function call 
       that takes each topic in the array remakes the buttons on the page.*/
+      $("#select-topic").on("click", function(event) {
+
+        event.preventDefault();
+        var inputTopic = $("#user-topic").val().trim();
+        topics.push(inputTopic);
+        console.log(topics);
+        var button = $("<button>");
+            for (var i = 0; i < topics.length; i++) {
+
+        button.addClass("topic-button",);
+        button.attr("data-name", topics[i]);
+        button.text(topics[i]);
+        $("#buttons-view").append(button);
+            }
+      });  
 
 
+
+      $(document).on("click", ".gif", pauseGifs);
+      
+      function pauseGifs() {
+        var state = $(this).attr("data-state");
+        if (state === "still") {
+          $(this).attr("src", $(this).attr("data-animate"));
+          $(this).attr("data-state", "animate");
+        } else {
+          $(this).attr("src", $(this).attr("data-still"));
+          $(this).attr("datta-state", "still");
+        }
+      }
+})
+
+      
 </script>
 </body>
 
