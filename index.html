@@ -37,122 +37,123 @@
 </head>
 
 <body>
-  
-<div class="container">
-  <h1>Gif Generator</h1>
+
+  <div class="container">
+    <h1>Gif Generator</h1>
     <form id="gif-form">
       <label for="gif-input">Add a Topic</label>
       <input type="text" id="user-topic">
       <input id="select-topic" type="submit" value="Add">
     </form>
-  <div id="buttons-view"></div>
-  <div id="gifs-appear-here"></div>
-</div> 
+    <div id="buttons-view"></div>
+    <div id="gifs-appear-here"></div>
+  </div>
 
-<!-- add form input here -->
-
-
+  <!-- add form input here -->
 
 
- <!-- Added link to the jQuery Library -->
+
+
+  <!-- Added link to the jQuery Library -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script type="text/javascript">
-$(document).ready(function() {
-// make an array of topics for the generator
-var topics = ["dogs", "pizza", "smash brothers", "larry david"];
+    //$(document).ready(function () {
+      // make an array of topics for the generator
+      var topics = ["dogs", "pizza", "smash brothers", "larry david"];
 
-// function to turn items in array into buttons
-function renderButtons() {
-  
-  //loops through array of topics
-for (var i = 0; i < topics.length; i++) {
-  //generate buttons for each topic in the array
-  var button = $("<button>");
-  button.addClass("topic-button");
-  button.attr("data-name", topics[i]);
-  button.text(topics[i]);
-  $("#buttons-view").append(button);
-  
-}
+      // function to turn items in array into buttons
+      function renderButtons() {
 
-}
+        //loops through array of topics
+        for (var i = 0; i < topics.length; i++) {
+          //generate buttons for each topic in the array
+          var button = $("<button>");
+          button.addClass("topic-button");
+          button.attr("data-name", topics[i]);
+          button.text(topics[i]);
+          $("#buttons-view").append(button);
 
+        }
 
+      }
 
 
-$(document).on("click", ".topic-button", displayGifs,);
 
-//function for displaying buttons
 
-renderButtons();
+      $(document).on("click", ".topic-button", displayGifs, );
 
-//funtion for displaying gifs
-function displayGifs() {
-  var gifs = $(this).attr("data-name");
-  var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-        gifs + "&api_key=dc6zaTOxFJmzC&limit=10";
+      //function for displaying buttons
 
-  $.ajax({
-    url: queryURL,
-    method: "GET"
-  }).then(function(response) {
-    console.log(response);
+      renderButtons();
 
-    var results = response.data;
+      //funtion for displaying gifs
+      function displayGifs() {
+        var gifs = $(this).attr("data-name");
+        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+          gifs + "&api_key=dc6zaTOxFJmzC&limit=10";
 
-    for (var a = 0; a < results.length; a++) {
-      var gifsDiv = $("<div>");
-      var p = $("<p>").text("Rating " + results[a].rating);
-        var gifImage = $("<img>");
-        var still = results[a].images.fixed_height_still.url;
-        var animate = results[a].images.fixed_height.url;
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function (response) {
+          console.log(response);
 
-        gifImage.attr("src" ,still);
-        gifImage.addClass("gif");
-        gifImage.attr("data-state", "still");
-        gifImage.attr("data-still", still);
-        gifImage.attr("data-animate", animate);
+          var results = response.data;
 
-        gifsDiv.append(p);
-        gifsDiv.append(gifImage);
-        $("#gifs-appear-here").prepend(gifsDiv);
+          for (var a = 0; a < results.length; a++) {
+            var gifsDiv = $("<div>");
+            var p = $("<p>").text("Rating " + results[a].rating);
+            var gifImage = $("<img>");
+            var still = results[a].images.fixed_height_still.url;
+            var animate = results[a].images.fixed_height.url;
 
-    }
-          
+            gifImage.attr("src", still);
+            gifImage.addClass("gif");
+            gifImage.attr("data-state", "still");
+            gifImage.attr("data-still", still);
+            gifImage.attr("data-animate", animate);
 
-  });
-        
-}
+            gifsDiv.append(p);
+            gifsDiv.append(gifImage);
+            $("#gifs-appear-here").prepend(gifsDiv);
 
-        
+          }
+
+
+        });
+
+      }
 
 
 
 
 
-/* 6. Add a form to your page takes the value from a user input box 
-      and adds it into your `topics` array. Then make a function call 
-      that takes each topic in the array remakes the buttons on the page.*/
-      $("#select-topic").on("click", function(event) {
+
+
+      /* 6. Add a form to your page takes the value from a user input box 
+            and adds it into your `topics` array. Then make a function call 
+            that takes each topic in the array remakes the buttons on the page.*/
+      $("#select-topic").on("click", function (event) {
 
         event.preventDefault();
         var inputTopic = $("#user-topic").val().trim();
         topics.push(inputTopic);
         console.log(topics);
         var button = $("<button>");
-            for (var i = 0; i < topics.length; i++) {
+        for (var i = 0; i < topics.length; i++) {
 
-        button.addClass("topic-button",);
-        button.attr("data-name", topics[i]);
-        button.text(topics[i]);
-        $("#buttons-view").append(button);
-            }
-      });  
+          button.addClass("topic-button", );
+          button.attr("data-name", topics[i]);
+          button.text(topics[i]);
+          $("#buttons-view").append(button);
+        }
+      });
 
 
+      //play & pause gifs on click
 
       $(document).on("click", ".gif", pauseGifs);
-      
+
       function pauseGifs() {
         var state = $(this).attr("data-state");
         if (state === "still") {
@@ -160,13 +161,11 @@ function displayGifs() {
           $(this).attr("data-state", "animate");
         } else {
           $(this).attr("src", $(this).attr("data-still"));
-          $(this).attr("datta-state", "still");
+          $(this).attr("data-state", "still");
         }
       }
-})
-
-      
-</script>
+    //})
+  </script>
 </body>
 
 
